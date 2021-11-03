@@ -90,7 +90,7 @@ open class LicensesViewController: UIViewController {
                                               items: licenseItems,
                                       configureCell: { (cell: LicenseCell, item: LicenseItem) in
       cell.titleLabel.text = item.title
-      cell.bodyLabel.text = item.body
+      cell.bodyLabel.text = item.body?.htmlToString
     })
     tableView.dataSource = dataSource
   }
@@ -255,4 +255,19 @@ class LicenseCell: UITableViewCell {
 struct LicenseItem {
   var title: String?
   var body: String?
+}
+
+extension String {
+  private var htmlToAttributedString: NSAttributedString {
+    guard let data = data(using: .utf8) else { return NSAttributedString(string: self) }
+    do {
+      return try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding:String.Encoding.utf8.rawValue], documentAttributes: nil)
+    } catch {
+      return NSAttributedString(string: self)
+    }
+  }
+
+  var htmlToString: String {
+    return htmlToAttributedString.string
+  }
 }
