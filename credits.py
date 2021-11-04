@@ -140,7 +140,8 @@ def plist_from_file(path):
     for match in re.finditer(r'(?s)((?:[^\n][\n]?)+)', src_body):
         body = body + re.sub("(\\n)", " ", match.group()) + "\n\n"
     body = unicode(body, 'utf-8')
-    group['FooterText'] = rchop(body, " \n\n")
+    bodyContent = rchop(body, " \n\n")
+    group['FooterText'] = re.sub("\n", "<br />", bodyContent)
     return group
 
 
